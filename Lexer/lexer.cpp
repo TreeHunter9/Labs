@@ -19,8 +19,22 @@ Token Lexer::Next()
 	if (IsSpace(symbol))
 		return Token(Token::Space, symbol);
 
-	if (IsNewLine(symbol))
-		return Token(Token::NewLine, symbol);
+	if (IsEnd(symbol))
+		return Token(Token::End, symbol);
+
+	return Token(Token::Unknown, symbol);
+}
+
+Token Lexer::GetToken(char symbol)
+{
+	if (IsSymbol(symbol))
+		return Token(Token::Symbol, symbol);
+
+	if (IsDigit(symbol))
+		return Token(Token::Digit, symbol);
+
+	if (IsSpace(symbol))
+		return Token(Token::Space, symbol);
 
 	if (IsEnd(symbol))
 		return Token(Token::End, symbol);
@@ -30,16 +44,16 @@ Token Lexer::Next()
 
 bool Lexer::IsSymbol(char c)
 {
-	if (c > 'a' && c < 'z')
+	if (c >= 'a' && c <= 'z')
 		return true;
 
-	if (c > 'A' && c < 'Z')
+	if (c >= 'A' && c <= 'Z')
 		return true;
 
-	if (c > 'a' && c < 'ÿ')
+	if (c >= 'a' && c <= 'ÿ')
 		return true;
 
-	if (c > 'À' && c < 'ß')
+	if (c >= 'À' && c <= 'ß')
 		return true;
 
 	return false;
@@ -47,7 +61,7 @@ bool Lexer::IsSymbol(char c)
 
 bool Lexer::IsDigit(char c)
 {
-	if (c > '0' && c < '9')
+	if (c >= '0' && c <= '9')
 		return true;
 
 	return false;
@@ -55,18 +69,16 @@ bool Lexer::IsDigit(char c)
 
 bool Lexer::IsSpace(char c)
 {
-	if (c == ' ')
+	switch (c)
+	{
+	case ' ':
+	case '\t':
+	case '\r':
+	case '\n':
 		return true;
-
-	return false;
-}
-
-bool Lexer::IsNewLine(char c)
-{
-	if (c == '\n')
-		return true;
-
-	return false;
+	default:
+		return false;
+	}
 }
 
 bool Lexer::IsEnd(char c)

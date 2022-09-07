@@ -9,12 +9,12 @@ public:
 	~Lexer();
 
 	Token Next();
-
-	bool IsSymbol(char c);
-	bool IsDigit(char c);
-	bool IsSpace(char c);
-	bool IsNewLine(char c);
-	bool IsEnd(char c);
+	static Token GetToken(char symbol);
+private:
+	static bool IsSymbol(char c);
+	static bool IsDigit(char c);
+	static bool IsSpace(char c);
+	static bool IsEnd(char c);
 private:
 	const char* m_data;
 };

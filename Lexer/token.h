@@ -9,15 +9,14 @@ public:
 		Symbol,
 		Digit,
 		Space,
-		NewLine,
 		End,
 		Unknown
 	};
 
+	Token();
 	Token(Type type, char symbol);
 	~Token();
 
-	const char* GetNameType() const;
 	Type GetType() const;
 	char GetSymbol() const;
 private:

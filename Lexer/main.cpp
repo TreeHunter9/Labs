@@ -4,20 +4,18 @@
 #include <sstream>
 
 #include "lexer.h"
+#include "state_machine.h"
 
 int main()
 {
     std::fstream file("text.txt");
-    std::stringstream buffer;
-
     if (file.is_open() == false)
         return 0;
 
+    std::stringstream buffer;
     buffer << file.rdbuf();
     std::string str = buffer.str();
-    Lexer lexer(str.c_str());
-    for (Token token = lexer.Next(); token.GetType() != Token::End; token = lexer.Next())
-    {
-        std::cout << token.GetNameType() << " - " << token.GetSymbol() << '\n';
-    }
+
+    StateMachine stateMachine(str.c_str());
+    stateMachine.Start();
 }
