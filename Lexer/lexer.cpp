@@ -1,30 +1,5 @@
 #include "lexer.h"
 
-Lexer::Lexer(const char* data)
-	: m_data(data)
-{}
-
-Lexer::~Lexer()
-{}
-
-Token Lexer::Next()
-{
-	char symbol = *m_data++;
-	if (IsSymbol(symbol))
-		return Token(Token::Symbol, symbol);
-
-	if (IsDigit(symbol))
-		return Token(Token::Digit, symbol);
-
-	if (IsSpace(symbol))
-		return Token(Token::Space, symbol);
-
-	if (IsEnd(symbol))
-		return Token(Token::End, symbol);
-
-	return Token(Token::Unknown, symbol);
-}
-
 Token Lexer::GetToken(char symbol)
 {
 	if (IsSymbol(symbol))

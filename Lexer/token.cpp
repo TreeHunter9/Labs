@@ -1,7 +1,7 @@
 #include "token.h"
 
 Token::Token()
-	: m_type(Type::Unknown)
+	: m_type(Type::Unknown), m_symbol(0)
 {}
 
 Token::Token(Type type, char symbol)

@@ -1,9 +1,6 @@
-﻿#include <iostream>
-#include <fstream>
-#include <string_view>
+﻿#include <fstream>
 #include <sstream>
 
-#include "lexer.h"
 #include "state_machine.h"
 
 int main()
