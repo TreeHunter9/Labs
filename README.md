@@ -1,1 +1,1 @@
-# Lab 1 - Lexer
+# Lab 1 - Lexer C++
