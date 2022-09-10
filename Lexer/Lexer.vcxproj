@@ -106,6 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(SolutionDir)\includes</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,15 +130,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="lexer.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="state_machine.cpp" />
-    <ClCompile Include="token.cpp" />
+    <ClCompile Include="src/lexer.cpp" />
+    <ClCompile Include="src/main.cpp" />
+    <ClCompile Include="src/state_machine.cpp" />
+    <ClCompile Include="src/token.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lexer.h" />
-    <ClInclude Include="state_machine.h" />
-    <ClInclude Include="token.h" />
+    <ClInclude Include="includes/lexer.h" />
+    <ClInclude Include="includes/state_machine.h" />
+    <ClInclude Include="includes/token.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

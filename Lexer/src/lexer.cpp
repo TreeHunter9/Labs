@@ -25,7 +25,7 @@ bool Lexer::IsSymbol(char c)
 	if (c >= 'A' && c <= 'Z')
 		return true;
 
-	if (c >= 'a' && c <= 'ÿ')
+	if (c >= 'à' && c <= 'ÿ')
 		return true;
 
 	if (c >= 'À' && c <= 'ß')
