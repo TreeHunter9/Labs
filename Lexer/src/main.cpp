@@ -5,6 +5,7 @@
 
 int main()
 {
+    setlocale(LC_ALL, "Russian");
     std::ifstream file(".\\examples\\ex1.txt");
     if (file.is_open() == false)
         return 0;
