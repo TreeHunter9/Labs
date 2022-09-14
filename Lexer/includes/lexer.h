@@ -1,14 +1,14 @@
 #pragma once
 #include "token.h"
 
-static class Lexer
+class Lexer
 {
 public:
-	static Token GetToken(char symbol);
+	Token GetToken(char symbol);
 
 private:
-	static bool IsSymbol(char c);
-	static bool IsDigit(char c);
-	static bool IsSpace(char c);
-	static bool IsEnd(char c);
+	bool IsSymbol(char c);
+	bool IsDigit(char c);
+	bool IsSpace(char c);
+	bool IsEnd(char c);
 };

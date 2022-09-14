@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 
+#include "lexer.h"
 #include "token.h"
 
 class StateMachine
@@ -26,6 +27,7 @@ private:
 	void ProcessErrorState();
 private:
 	const char* m_data;
+	Lexer m_lexer;
 	States m_currentState;
 };
 

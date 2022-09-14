@@ -5,7 +5,7 @@
 #include "lexer.h"
 
 StateMachine::StateMachine(const char* data)
-	: m_data(data), m_currentState(States::Waiting)
+	: m_data(data), m_currentState(States::Waiting), m_lexer(Lexer())
 {}
 
 StateMachine::~StateMachine()
@@ -17,7 +17,7 @@ void StateMachine::Start()
 	std::vector<char> buffer;
 	while (true)
 	{
-		token = Lexer::GetToken(*m_data++);
+		token = m_lexer.GetToken(*m_data++);
 		switch (m_currentState)
 		{
 		case States::Waiting:
