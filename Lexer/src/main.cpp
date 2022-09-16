@@ -7,7 +7,6 @@
 
 int main()
 {
-    auto start = std::chrono::high_resolution_clock::now();
     setlocale(LC_ALL, "Russian");
     std::ifstream file(".\\examples\\ex1.txt");
     if (file.is_open() == false)
@@ -18,11 +17,13 @@ int main()
     std::string str = buffer.str();
 
     StateMachine stateMachine(str.c_str());
-    stateMachine.Start();
 
+    auto start = std::chrono::high_resolution_clock::now();
+    stateMachine.Start();
     auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<float> duration = end - start;
-    std::cout << "Execution time: " << duration.count() * 1000.0f << "ms " << '\n';
+
+    auto duration = end - start;
+    std::cout << "Execution time: " << duration.count() << " ns" << '\n';
 
     return 0;
 }
