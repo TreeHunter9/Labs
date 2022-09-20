@@ -1,6 +1,5 @@
 ﻿#include <iostream>
 #include <chrono>
-#include <stdlib.h>
 
 #include "quick_sort.h"
 

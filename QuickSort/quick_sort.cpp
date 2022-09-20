@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "quick_sort_stack.h"
 
 namespace sort
@@ -15,64 +17,47 @@ namespace sort
 		int leftCounter;
 		int rightCounter;
 
-		int pivotIndex;
 		int pivotValue;
 
-		QuickSortStack stack(size);
+		QuickSortStack stack(log10((double)size) / log10(2.0) + 1);
 		stack.Push(leftIndex, rightIndex);
 
 		while (stack.IsEmpty() == false)
 		{
 			stack.Pop(leftIndex, rightIndex);
 
-			leftCounter = leftIndex;
-			rightCounter = rightIndex - 1;
-
-			pivotIndex = (leftIndex + rightIndex) / 2;
-			pivotValue = arr[pivotIndex];
-
-			swap(arr[pivotIndex], arr[rightIndex]);
-
-			while (leftCounter < rightCounter)
+			while (leftIndex < rightIndex)
 			{
-				while (arr[leftCounter] < pivotValue)
-					leftCounter++;
-				while (arr[rightCounter] > pivotValue)
-					rightCounter--;
+				leftCounter = leftIndex;
+				rightCounter = rightIndex;
 
-				if (leftCounter >= rightCounter)
-					break;
+				pivotValue = arr[(leftIndex + rightIndex) / 2];
 
-				swap(arr[leftCounter], arr[rightCounter]);
-
-				leftCounter++;
-			}
-
-			swap(arr[leftCounter], arr[rightIndex]);
-
-			if (leftCounter - leftIndex == 2)
-			{
-				if (arr[leftIndex] > arr[leftIndex + 1])
+				while (leftCounter <= rightCounter)
 				{
-					swap(arr[leftIndex], arr[leftIndex + 1]);
+					while (arr[leftCounter] < pivotValue)
+						leftCounter++;
+					while (arr[rightCounter] > pivotValue)
+						rightCounter--;
+
+					if (leftCounter <= rightCounter)
+					{
+						swap(arr[leftCounter], arr[rightCounter]);
+						leftCounter++;
+						rightCounter--;
+					}
+				}
+				if (rightCounter - leftIndex < rightIndex - leftCounter)
+				{
+					stack.Push(leftCounter, rightIndex);
+					rightIndex = rightCounter;
+				}
+				else
+				{
+					stack.Push(leftIndex, rightCounter);
+					leftIndex = leftCounter;
 				}
 			}
-			else if (leftCounter - leftIndex > 1)
-			{
-				stack.Push(leftIndex, leftCounter - 1);
-			}
-
-			if (rightIndex - rightCounter == 2)
-			{
-				if (arr[rightIndex] < arr[rightIndex - 1])
-				{
-					swap(arr[rightIndex], arr[rightIndex - 1]);
-				}
-			}
-			else if (rightIndex - rightCounter > 1)
-			{
-				stack.Push(leftCounter + 1, rightIndex);
-			}			
 		}
 	}
 
