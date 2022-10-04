@@ -1,25 +1,12 @@
 #pragma once
 
 template<class T>
-class LinkedListNode
-{
-public:
-	LinkedListNode(const T& value)
-		: value(value), next(nullptr), prev(nullptr)
-	{}
-public:
-	T value;
-private:
-	LinkedListNode<T>* next;
-	LinkedListNode<T>* prev;
-};
+class LinkedListNode;
 
 template<class T>
 class LinkedListIterator
 {
 public:
-	friend LinkedListNode<T>;
-
 	using ValueType = LinkedListNode<T>;
 	using PointerType = ValueType*;
 	using ReferenceType = ValueType&;	
@@ -80,8 +67,6 @@ private:
 template<class T>
 class LinkedList
 {
-public:
-	friend LinkedListNode<T>;
 public:
 	LinkedList()
 		: m_first(nullptr), m_last(nullptr)
@@ -238,4 +223,21 @@ private:
 private:
 	LinkedListNode<T>* m_first;
 	LinkedListNode<T>* m_last;
+};
+
+template<class T>
+class LinkedListNode
+{
+public:
+	LinkedListNode(const T& value)
+		: value(value), next(nullptr), prev(nullptr)
+	{}
+public:
+	T value;
+private:
+	LinkedListNode<T>* next;
+	LinkedListNode<T>* prev;
+
+	friend LinkedListIterator<T>;
+	friend LinkedList<T>;
 };
