@@ -130,7 +130,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="linked_list.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="linked_list.h" />
