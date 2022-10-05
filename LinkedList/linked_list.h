@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 template<class T>
 class LinkedListNode;
 
@@ -110,7 +112,7 @@ public:
 	void RemoveBegin()
 	{
 		if (!m_first)
-			return;
+			throw std::logic_error("List is empty.");
 		
 		if (m_first == m_last)
 		{
@@ -129,7 +131,7 @@ public:
 	void RemoveEnd()
 	{
 		if (!m_first)
-			return;
+			throw std::logic_error("List is empty.");
 
 		if (m_first == m_last)
 		{
@@ -149,7 +151,7 @@ public:
 	{
 		LinkedListNode<T>* foundNode = FindNode(value);
 		if (!foundNode)
-			return;
+			throw std::logic_error("List do not have that value.");
 
 		LinkedListNode<T>* prevNode = foundNode->prev;
 		LinkedListNode<T>* nextNode = foundNode->next;
