@@ -1,4 +1,5 @@
 #pragma once
+
 #include <stdexcept>
 #include <iostream>
 
@@ -21,14 +22,14 @@ public:
 };
 
 template<class T>
-class AVLTree
+class BinaryTree
 {
 public:
-	AVLTree()
+	BinaryTree()
 		: m_root(nullptr)
 	{}
 
-	~AVLTree()
+	~BinaryTree()
 	{
 		DeleteNode(m_root);
 	}
@@ -86,7 +87,7 @@ public:
 			m_root = x;
 		if(y != found_node)
 		{
-			found_node->value =y->value;
+			found_node->value = y->value;
 		}
 		delete y;
 	}

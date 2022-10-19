@@ -1,8 +1,8 @@
 #include <iostream>
-#include "avl_tree.h"
+#include "binary_tree.h"
 
 int main() {
-	AVLTree<int> tree;
+	BinaryTree<int> tree;
 	tree.Insert(5);
 	tree.Insert(4);
 	tree.Insert(6);
