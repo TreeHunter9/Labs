@@ -19,11 +19,11 @@ public:
 		: node_id(-1), min_weight(0), prev_node_id(-1)
 	{}
 
-	Node(std::vector<Edge> edges, int node_id)
-		: edges(edges), node_id(node_id), min_weight(0), prev_node_id(-1)
+	Node(int node_id, std::vector<Edge> edges)
+		: node_id(node_id), edges(edges), min_weight(0), prev_node_id(-1)
 	{}
 
-	bool SetMinWeight(int new_min_weight, int prev_node)
+	bool TrySetMinWeight(int new_min_weight, int prev_node)
 	{
 		if (new_min_weight >= min_weight && min_weight > 0)
 			return false;
@@ -43,7 +43,7 @@ template<size_t size>
 class Graph
 {
 public:
-	Graph(int map[size][size])
+	Graph(const int raw_map[size][size])
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -51,17 +51,23 @@ public:
 			edges.reserve(size);
 			for (int j = 0; j < size; j++)
 			{
-				if (map[i][j])
-					edges.push_back({j, map[i][j]});
+				if (raw_map[i][j])
+					edges.push_back({j + 1, raw_map[i][j]});
 			}
-			m_nodes[i] = Node(edges, i);
+			m_nodes[i + 1] = Node(i + 1, edges);
+		}
+	}
+
+	Graph(const Node nodes_map[size])
+	{
+		for (int i = 0; i < size; i++)
+		{
+			m_nodes[i + 1] = nodes_map[i];
 		}
 	}
 
 	std::vector<int> FindShortesPath(int start_id, int finish_id)
 	{
-		start_id--;
-		finish_id--;
 		if (start_id == finish_id)
 			throw std::invalid_argument("Start and finish id are the same");
 
@@ -77,7 +83,7 @@ public:
 
 			for (const Edge& edge : node.edges)
 			{
-				if (m_nodes.at(edge.to).SetMinWeight(node.min_weight + edge.weight, node.node_id))
+				if (m_nodes.at(edge.to).TrySetMinWeight(node.min_weight + edge.weight, node.node_id))
 					next_nodes.push(edge.to);
 			}
 		}
@@ -86,8 +92,7 @@ public:
 		std::vector<int> path;
 		while (m_nodes.count(current_id))
 		{
-			path.push_back(current_id + 1);
-			
+			path.push_back(current_id);			
 			current_id = m_nodes.at(current_id).prev_node_id;
 		}
 		if (path.empty())
@@ -104,6 +109,9 @@ namespace graph_util
 {
 	void PrintPath(std::vector<int> path)
 	{
+		if (path.empty())
+			return;
+
 		for (int i = 0; i < path.size() - 1; i++)
 		{
 			std::cout << path[i] << " -> ";
