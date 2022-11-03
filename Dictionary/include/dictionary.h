@@ -241,10 +241,8 @@ private:
 		}
 
 		Node<TKey, TValue>* current_node = m_bucket[key_hash];
-		int current_depth = 0;
 		while (current_node)
 		{
-			current_depth++;
 			if (!current_node->next_node)
 				break;
 			current_node = current_node->next_node;
