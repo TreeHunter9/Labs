@@ -206,7 +206,7 @@ private:
 		return nullptr;
 	}
 
-	void DeleteNodes(Node<TKey, TValue>* node)
+	void DeleteChainNodes(Node<TKey, TValue>* node)
 	{
 		Node<TKey, TValue>* current_node = node;
 		Node<TKey, TValue>* delete_node = current_node;
@@ -225,9 +225,9 @@ private:
 			if (m_bucket[i] == nullptr)
 				continue;
 			
-			DeleteNodes(m_bucket[i]);
+			DeleteChainNodes(m_bucket[i]);
+			m_bucket[i] = nullptr;
 		}
-		delete[] m_bucket;
 	}
 
 	void FindNewPlace(Node<TKey, TValue>* node)
@@ -253,7 +253,7 @@ private:
 	void Resize()
 	{
 		int old_bucket_size = m_bucket_size;
-		m_bucket_size *= 1.5;
+		m_bucket_size *= m_size_multiplier;
 
 		Node<TKey, TValue>** old_bucket = m_bucket;
 		m_bucket = new Node<TKey, TValue>*[m_bucket_size] {nullptr};
@@ -278,4 +278,5 @@ private:
 
 	static const int m_max_depth = 10;
 	static const int m_default_bucket_size = 10;
+	static const int m_size_multiplier = 2;
 };
