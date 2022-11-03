@@ -250,16 +250,12 @@ private:
 			current_node = current_node->next_node;
 		}
 		current_node->next_node = node;
-
-		if (current_depth > m_max_depth)
-			Resize();
 	}
 
 	void Resize()
 	{
 		int old_bucket_size = m_bucket_size;
 		m_bucket_size *= 1.5;
-		m_node_count = 0;
 
 		Node<TKey, TValue>** old_bucket = m_bucket;
 		m_bucket = new Node<TKey, TValue>*[m_bucket_size] {nullptr};
