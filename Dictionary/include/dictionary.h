@@ -37,6 +37,7 @@ public:
 	~Dictionary()
 	{
 		ClearBucket();
+		delete[] m_bucket;
 	}
 
 	TValue& operator[](TKey key)
@@ -177,7 +178,6 @@ public:
 	void Clear()
 	{
 		ClearBucket();
-		m_bucket_size = m_default_bucket_size;
 		m_node_count = 0;
 	}
 
