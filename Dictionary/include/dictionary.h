@@ -2,18 +2,39 @@
 
 #include <functional>
 #include <cstring>
+#include <string>
+#include <iostream>
+
+#define OWN_HASH_FUNC 0
+
+#if OWN_HASH_FUNC
+#define HASH(type, value) GetHash(value)
+#else
+#define HASH(type, value) std::hash<type>{}(value)
+#endif
+
+size_t GetHash(std::string value)
+{
+	size_t hash = 0;
+	for (const char symbol : value)
+	{
+		hash += symbol * symbol;
+	}
+	return hash;
+};
 
 template<class TKey, class TValue>
 class Node
 {
 public:
 	Node(TKey key)
-		: key(key), next_node(nullptr)
+		: key(key)
 	{}
 public:
 	TKey key;
 	TValue value;
-	Node<TKey, TValue>* next_node;
+	Node<TKey, TValue>* next_node = nullptr;
+	size_t collision_count = 0;
 };
 
 template<class TKey, class TValue>
@@ -21,14 +42,14 @@ class Dictionary
 {
 public:
 	Dictionary()
-		: m_bucket_size(m_default_bucket_size), m_node_count(0)
+		: m_bucket_size(m_default_bucket_size)
 	{
 		m_bucket = new Node<TKey, TValue>*[m_bucket_size] {nullptr};
 		memset(m_bucket, 0, m_bucket_size);
 	}
 
 	Dictionary(unsigned int size)
-		: m_bucket_size(size), m_node_count(0)
+		: m_bucket_size(size)
 	{
 		m_bucket = new Node<TKey, TValue>*[m_bucket_size] {nullptr};
 		memset(m_bucket, 0, m_bucket_size);
@@ -42,7 +63,7 @@ public:
 
 	TValue& operator[](TKey key)
 	{
-		std::size_t key_hash = std::hash<TKey>{}(key) % m_bucket_size;
+		std::size_t key_hash = HASH(TKey, key) % m_bucket_size;
 		Node<TKey, TValue>* new_node = new Node<TKey, TValue>(key);
 
 		if (m_bucket[key_hash] == nullptr)
@@ -56,8 +77,8 @@ public:
 		int current_depth = 0;
 		while (current_node)
 		{
-			if (current_node->key == key)
-				throw std::invalid_argument("Key already exists");
+			//if (current_node->key == key)
+			//	throw std::invalid_argument("Key already exists");
 			
 			current_depth++;
 			if (!current_node->next_node)
@@ -65,9 +86,9 @@ public:
 			current_node = current_node->next_node;
 		}
 		current_node->next_node = new_node;
-
-		if (current_depth > m_max_depth)
-			Resize();
+		m_bucket[key_hash]->collision_count = current_depth;
+		//if (current_depth > m_max_depth)
+			//Resize();
 
 		m_node_count++;
 		return new_node->value;
@@ -80,7 +101,7 @@ public:
 
 	bool TryAdd(const TKey key, const TValue value)
 	{
-		std::size_t key_hash = std::hash<TKey>{}(key) % m_bucket_size;
+		std::size_t key_hash = HASH(TKey, key) % m_bucket_size;
 		Node<TKey, TValue>* new_node = new Node<TKey, TValue>(key);
 
 		if (m_bucket[key_hash] == nullptr)
@@ -133,7 +154,7 @@ public:
 
 	bool ContainsKey(const TKey& key)
 	{
-		std::size_t key_hash = std::hash<TKey>{}(key) % m_bucket_size;
+		std::size_t key_hash = HASH(TKey, key) % m_bucket_size;
 		Node<TKey, TValue>* node = m_bucket[key_hash];
 		if (node == nullptr)
 			return false;
@@ -149,7 +170,7 @@ public:
 
 	bool RemoveKey(const TKey& key)
 	{
-		std::size_t key_hash = std::hash<TKey>{}(key) % m_bucket_size;
+		std::size_t key_hash = HASH(TKey, key) % m_bucket_size;
 		if (!m_bucket[key_hash])
 			return false;
 		
@@ -175,6 +196,22 @@ public:
 		return false;
 	}
 
+	void PrintHistogram()
+	{
+		for (int i = 0; i < m_bucket_size; i++)
+		{
+			if (m_bucket[i] == nullptr)
+				continue;
+			
+			std::cout << i << " |";
+			for (int j = 0; j < m_bucket[i]->collision_count; j++)
+			{
+				std::cout << '=';
+			}
+			std::cout << ' ' << m_bucket[i]->collision_count << '\n';
+		}
+	}
+
 	void Clear()
 	{
 		ClearBucket();
@@ -195,7 +232,7 @@ public:
 private:
 	Node<TKey, TValue>* GetNodeByKey(const TKey& key)
 	{
-		std::size_t key_hash = std::hash<TKey>{}(key) % m_bucket_size;
+		std::size_t key_hash = HASH(TKey, key) % m_bucket_size;
 		Node<TKey, TValue>* node = m_bucket[key_hash];
 		while(node)
 		{
@@ -220,7 +257,7 @@ private:
 
 	void ClearBucket()
 	{
-		for (int i = 0; i < m_node_count; i++)
+		for (int i = 0; i < m_bucket_size; i++)
 		{
 			if (m_bucket[i] == nullptr)
 				continue;
@@ -232,7 +269,7 @@ private:
 
 	void FindNewPlace(Node<TKey, TValue>* node)
 	{
-		std::size_t key_hash = std::hash<TKey>{}(node->key) % m_bucket_size;
+		std::size_t key_hash = HASH(TKey, node->key) % m_bucket_size;
 
 		if (m_bucket[key_hash] == nullptr)
 		{
@@ -273,8 +310,8 @@ private:
 	}
 private:
 	Node<TKey, TValue>** m_bucket;
-	int m_node_count;
 	int m_bucket_size;
+	int m_node_count = 0;
 
 	static const int m_max_depth = 10;
 	static const int m_default_bucket_size = 10;
