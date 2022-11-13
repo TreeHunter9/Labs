@@ -4,6 +4,7 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <cmath>
 
 #define OWN_HASH_FUNC 0
 
@@ -12,6 +13,15 @@
 #else
 #define HASH(type, value) std::hash<type>{}(value)
 #endif
+
+template<class TKey, class TValue>
+class Dictionary;
+
+namespace dictionary_utils
+{
+	template<class TKey, class TValue>
+	void PrintHistogram(Dictionary<TKey, TValue>& dictionary);
+};
 
 size_t GetHash(std::string value)
 {
@@ -196,22 +206,6 @@ public:
 		return false;
 	}
 
-	void PrintHistogram()
-	{
-		for (int i = 0; i < m_bucket_size; i++)
-		{
-			if (m_bucket[i] == nullptr)
-				continue;
-			
-			std::cout << i << " |";
-			for (int j = 0; j < m_bucket[i]->collision_count; j++)
-			{
-				std::cout << '=';
-			}
-			std::cout << ' ' << m_bucket[i]->collision_count << '\n';
-		}
-	}
-
 	void Clear()
 	{
 		ClearBucket();
@@ -316,4 +310,40 @@ private:
 	static const int m_max_depth = 10;
 	static const int m_default_bucket_size = 10;
 	static const int m_size_multiplier = 2;
+
+	template<class T1, class T2>
+	friend void dictionary_utils::PrintHistogram(Dictionary<T1, T2>& dictionary);
 };
+
+namespace dictionary_utils
+{
+	template<class TKey, class TValue>
+	void PrintHistogram(Dictionary<TKey, TValue>& dictionary)
+	{
+		int max_numerical_digit = std::log10(dictionary.Size()) + 1;
+		int space_count = max_numerical_digit;
+		int next_number_size = 10;
+		for (int i = 0; i < dictionary.m_bucket_size; i++)
+		{
+			if (dictionary.m_bucket[i] == nullptr)
+				continue;
+			
+			if (i == next_number_size)
+			{
+				next_number_size *= 10;
+				space_count--;
+			}
+
+			std::cout << i;
+			for (int i = 0; i < space_count; i++)
+				std::cout << ' ';
+			std::cout << '|';
+
+			for (int j = 0; j < dictionary.m_bucket[i]->collision_count; j++)
+			{
+				std::cout << '=';
+			}
+			std::cout << ' ' << dictionary.m_bucket[i]->collision_count << '\n';
+		}
+	}
+}

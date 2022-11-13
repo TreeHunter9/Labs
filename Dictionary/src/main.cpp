@@ -24,6 +24,6 @@ int main(int, char**)
 		}
 	}
 
-	dict.PrintHistogram();
+	dictionary_utils::PrintHistogram(dict);
 	return 0;
 }
