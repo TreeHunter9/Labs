@@ -88,6 +88,14 @@ public:
 			}
 		}
 
+		if (m_nodes.at(finish_id).prev_node_id == -1)
+			throw std::invalid_argument("Those two nodes are not connected");
+
+		return CreateShortestPath(finish_id);
+	}
+private:
+	std::vector<int> CreateShortestPath(int finish_id)
+	{
 		int current_id = finish_id;
 		std::vector<int> path;
 		while (m_nodes.count(current_id))
@@ -95,8 +103,6 @@ public:
 			path.push_back(current_id);			
 			current_id = m_nodes.at(current_id).prev_node_id;
 		}
-		if (path.empty())
-			throw std::invalid_argument("Those two nodes are not \"connected\"");
 
 		std::reverse(path.begin(), path.end());
 		return path;
