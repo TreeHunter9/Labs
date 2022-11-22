@@ -7,3 +7,5 @@
 # Lab 4 - Binary Tree C++
 
 # Lab 5 - Dijkstra C++
+
+# Lab 6 - Dictionary
